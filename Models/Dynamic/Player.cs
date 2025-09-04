@@ -7,8 +7,8 @@ namespace betrayal_hill.Models.Dynamic
         public int Id { get; set; }
         public int GameId { get; set; }
         public Game Game { get; set; } = null!;
-        public int CharacterId { get; set; }
-        public Character Character { get; set; } = null!;
+        public int ExplorerId { get; set; }
+        public Explorer Explorer { get; set; } = null!;
         // Current stats (not the full track; just current values)
         public int Might { get; set; }
         public int Speed { get; set; }
