@@ -31,3 +31,8 @@ node_modules/
 
 # Temporary files
 *.tmp
+
+# SQLite database
+*.db
+*.db-shm
+*.db-wal
