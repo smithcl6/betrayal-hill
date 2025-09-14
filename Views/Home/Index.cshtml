@@ -2,7 +2,40 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h2>SignalR Dice Test</h2>
+<button id="rollButton">Roll Dice</button>
+<pre id="log"></pre>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/9.0.6/signalr.min.js" integrity="sha512-kkMt8UThSmWcdXLYFaGZ/U6vyWSNLZMUWQ5SMeF80pGqrEkH5ei9D/3MbVQpB8p7D5C3A4vlX7BpsWTT2BfB6A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        const log = msg => document.getElementById("log").textContent += msg + "\n";
+
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/gamehub")
+            .build();
+
+        connection.on("joinGame", () => log('Player joined game.'));
+
+        connection.on("rollResult", (dice) => {
+            let result = '';
+            let total = 0;
+            for (const die of dice) {
+                result += die + ' + ';
+                total += die;
+            }
+            result = result.substring(0, result.length - 3);
+            log(`Player rolled ${result} = ${total}`);
+        });
+
+        connection.start().then(() => {
+            log("Connected to hub.");
+            connection.invoke("JoinGame");
+        });
+
+        document.getElementById("rollButton").addEventListener("click", () => {
+            let numberOfDice = Math.floor(Math.random() * 8) + 1;
+            connection.invoke("RollDice", numberOfDice);
+        });
+    </script>
+}

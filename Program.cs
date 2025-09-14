@@ -1,10 +1,13 @@
 using betrayal_hill.Data;
+using betrayal_hill.Hubs;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddSignalR();
 
 builder.Services.AddDbContext<BetrayalContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("BetrayalDb")));
 
@@ -30,5 +33,7 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
+// Maps hub to "/gamehub"
+app.MapHub<GameHub>("/gamehub");
 
 app.Run();
